@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mission: Manana 💖</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Sacramento&family=Quicksand:wght@400;600;700&display=swap');
+
+        :root {
+            --primary: #ff758c;
+            --secondary: #ff7eb3;
+            --bg-color: #fad0c4;
+            --text-color: #4a4a4a;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background: linear-gradient(to top, #fad0c4 0%, #ffd1ff 100%);
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: var(--text-color);
+        }
+
+        /* Container for all screens */
+        .container {
+            position: relative;
+            width: 100%;
+            max-width: 450px;
+            height: 100vh;
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        /* Utility Classes */
+        .hidden { display: none !important; }
+        .fade-in { animation: fadeIn 0.8s ease forwards; }
+        .slide-up { animation: slideUp 0.8s ease forwards; }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideUp { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+        h1 { font-family: 'Sacramento', cursive; font-size: 3.5rem; color: var(--primary); line-height: 1.2; margin-bottom: 10px; }
+        h2 { font-size: 1.8rem; color: #d63384; margin-bottom: 15px; }
+        p { font-size: 1.1rem; margin-bottom: 20px; color: #666; font-weight: 600; }
+
+        .btn {
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 15px 35px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(255, 117, 140, 0.4);
+            transition: transform 0.2s;
+            margin-top: 10px;
+        }
+        .btn:active { transform: scale(0.95); }
+
+        /* --- STAGE 1: SCANNER --- */
+        .scanner-box {
+            width: 100px; height: 100px; border: 2px solid var(--primary);
+            margin: 0 auto 20px; border-radius: 15px; position: relative;
+            display: flex; justify-content: center; align-items: center;
+            cursor: pointer; overflow: hidden;
+            background: rgba(255,255,255,0.5);
+        }
+        .fingerprint { font-size: 3rem; opacity: 0.5; animation: pulse 1.5s infinite; }
+        .scan-line {
+            position: absolute; width: 100%; height: 2px; background: red;
+            top: 0; left: 0; animation: scan 2s linear infinite; display: none;
+        }
+        .scanner-box.scanning .scan-line { display: block; }
+
+        @keyframes scan { 0% { top: 0; } 100% { top: 100%; } }
+        @keyframes pulse { 0% { opacity: 0.3; } 50% { opacity: 0.8; } 100% { opacity: 0.3; } }
+
+        /* --- STAGE 3: QUIZ --- */
+        .quiz-option {
+            background: white; padding: 15px; margin: 10px 0; border-radius: 15px;
+            cursor: pointer; border: 2px solid transparent; transition: 0.3s;
+            font-weight: bold;
+        }
+        .quiz-option:hover { border-color: var(--primary); background: #fff0f3; }
+
+        /* --- STAGE 4: BALLOON GAME --- */
+        #game-area {
+            height: 300px; width: 100%; position: relative;
+            background: rgba(255,255,255,0.5); border-radius: 20px;
+            overflow: hidden; margin-bottom: 20px;
+        }
+        .angry-emoji {
+            position: absolute; font-size: 2.5rem; cursor: pointer;
+            animation: floatUp linear infinite; user-select: none;
+        }
+        @keyframes floatUp { from { bottom: -50px; } to { bottom: 350px; } }
+
+        /* --- STAGE 5: CONTRACT --- */
+        .contract-item { text-align: left; background: white; padding: 10px; margin: 5px 0; border-radius: 10px; display: flex; align-items: center; }
+        .contract-item input { margin-right: 15px; transform: scale(1.5); accent-color: var(--primary); }
+
+        /* --- STAGE 6: RUNAWAY BTN --- */
+        .btn-group { position: relative; height: 100px; margin-top: 20px; }
+        .no-btn { background: #555; position: absolute; right: 20%; }
+
+        /* --- STAGE 7: FINAL --- */
+        .polaroid-stack { position: relative; height: 200px; width: 200px; margin: 0 auto; }
+        .polaroid-stack img {
+            position: absolute; width: 100%; border: 5px solid white;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2); transition: 0.5s;
+        }
+        .polaroid-stack:hover img:nth-child(1) { transform: rotate(-10deg) translateX(-20px); }
+        .polaroid-stack:hover img:nth-child(2) { transform: rotate(10deg) translateX(20px); }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <div id="stage1" class="slide-up">
+        <h1>Access Control</h1>
+        <p>Security Check Required.<br>Only "Kakkku" can enter.</p>
+        <div class="scanner-box" id="scanner" onclick="startScan()">
+            <div class="fingerprint">👆</div> <div class="scan-line"></div>
+        </div>
+        <p id="scan-text">Tap to Scan Fingerprint</p>
+    </div>
+
+    <div id="stage2" class="hidden">
+        <h1 style="color:red">⚠️ WARNING ⚠️</h1>
+        <p>Extremely High Anger Levels Detected!</p>
+        <div style="font-size: 4rem; margin: 20px;">😤😡🤬</div>
+        <p>System Overheated. <br>Need to cool down immediately.</p>
+        <button class="btn" onclick="nextStage(2)">Activate Cooling System ❄️</button>
+    </div>
+
+    <div id="stage3" class="hidden">
+        <h2>Quick Security Questions 🧐</h2>
+        <p id="q-text">Who is the cutest girl in the world?</p>
+        
+        <div id="quiz-options">
+            <div class="quiz-option" onclick="wrongAnswer()">Some random girl</div>
+            <div class="quiz-option" onclick="correctAnswer()">Kakkku (My Gf) 💖</div>
+            <div class="quiz-option" onclick="wrongAnswer()">Katrina Kaif</div>
+        </div>
+    </div>
+
+    <div id="stage4" class="hidden">
+        <h2>Anger Detox Mode 🎈</h2>
+        <p>Pop 5 Angry Emojis to release stress!</p>
+        <p style="font-size: 2rem;">Score: <span id="score">0</span>/5</p>
+        <div id="game-area"></div>
+    </div>
+
+    <div id="stage5" class="hidden">
+        <h2>Peace Treaty 📜</h2>
+        <p>Select all to proceed:</p>
+        <div class="contract-item">
+            <input type="checkbox" onchange="checkContract()" class="c-box">
+            <label>Gagan is stupid but I love him.</label>
+        </div>
+        <div class="contract-item">
+            <input type="checkbox" onchange="checkContract()" class="c-box">
+            <label>I will smile after reading this.</label>
+        </div>
+        <div class="contract-item">
+            <input type="checkbox" onchange="checkContract()" class="c-box">
+            <label>Thoda sa maaf kar diya.</label>
+        </div>
+        <button class="btn" id="contract-btn" style="opacity:0.5; pointer-events:none;" onclick="nextStage(5)">Sign & Proceed ✍️</button>
+    </div>
+
+    <div id="stage6" class="hidden">
+        <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3Z5eGk4aWx1Z2s5Z2s5Z2s5Z2s5Z2s5Z2s5Z2s5Z2s5biZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/MDJ9IbxxvDUQM/giphy.gif" style="width:100%; border-radius:15px; margin-bottom:10px;">
+        
+        <h1>Sorryy Kakkku! 🥺</h1>
+        <p>Maan jaoo naa itna gussa nhi krte mere bacheeee<br>🤭😁💖✨💗❤️😚👉👈🧿</p>
+        
+        <div class="btn-group">
+            <button class="btn" onclick="finalSuccess()">Maan Gayi! 💖</button>
+            <button class="btn no-btn" id="runawayBtn" onmouseover="moveButton()">Nahi 😤</button>
+        </div>
+    </div>
+
+    <div id="stage7" class="hidden">
+        <h1>Yayyy! 🥳</h1>
+        <p>Pata tha maan jaogi! You are the best! ❤️</p>
+        
+        <div class="polaroid-stack">
+            <img src="https://media.giphy.com/media/26BRv0ThflsHCqDrG/giphy.gif" style="z-index:1;">
+            <img src="https://media.giphy.com/media/3o7TKoWXm3zgLs747C/giphy.gif" style="z-index:0; transform: rotate(10deg);">
+        </div>
+        
+        <h2 style="margin-top:20px;">I Love You! 🧿</h2>
+        <p>Ab reply kar do jaldi se!</p>
+    </div>
+
+</div>
+
+<script>
+    // --- STAGE 1 LOGIC ---
+    function startScan() {
+        const scanner = document.getElementById('scanner');
+        const text = document.getElementById('scan-text');
+        scanner.classList.add('scanning');
+        text.innerHTML = "Scanning...";
+        
+        setTimeout(() => {
+            scanner.classList.remove('scanning');
+            text.innerHTML = "Access Granted! ✅";
+            text.style.color = "green";
+            setTimeout(() => nextStage(1), 1000);
+        }, 2000);
+    }
+
+    // --- STAGE TRANSITION ---
+    function nextStage(current) {
+        document.getElementById(`stage${current}`).classList.add('hidden');
+        const next = document.getElementById(`stage${current + 1}`);
+        next.classList.remove('hidden');
+        next.classList.add('fade-in');
+
+        if(current + 1 === 4) startGame();
+    }
+
+    // --- STAGE 3 QUIZ ---
+    function wrongAnswer() {
+        alert("Galat jawab! Try again. Hint: She is looking at the screen.");
+    }
+    function correctAnswer() {
+        alert("Correct! 7 Crore! 🎉");
+        nextStage(3);
+    }
+
+    // --- STAGE 4 GAME ---
+    let score = 0;
+    function startGame() {
+        const area = document.getElementById('game-area');
+        const interval = setInterval(() => {
+            if(score >= 5) {
+                clearInterval(interval);
+                alert("Anger Level: 0%. You are calm now! 😌");
+                nextStage(4);
+                return;
+            }
+            createBalloon(area);
+        }, 800);
+    }
+
+    function createBalloon(area) {
+        const emoji = document.createElement('div');
+        emoji.classList.add('angry-emoji');
+        emoji.innerText = ['😡', '😤', '🤬', '👺', '🔪'][Math.floor(Math.random() * 5)];
+        emoji.style.left = Math.random() * 90 + '%';
+        emoji.style.animationDuration = (Math.random() * 2 + 2) + 's';
+        
+        emoji.onclick = function() {
+            this.innerText = '💥';
+            setTimeout(() => this.remove(), 200);
+            score++;
+            document.getElementById('score').innerText = score;
+        };
+        
+        area.appendChild(emoji);
+        
+        setTimeout(() => emoji.remove(), 4000);
+    }
+
+    // --- STAGE 5 CONTRACT ---
+    function checkContract() {
+        const checks = document.querySelectorAll('.c-box');
+        const btn = document.getElementById('contract-btn');
+        let allChecked = true;
+        checks.forEach(c => { if(!c.checked) allChecked = false; });
+        
+        if(allChecked) {
+            btn.style.opacity = 1;
+            btn.style.pointerEvents = 'all';
+        }
+    }
+
+    // --- STAGE 6 RUNAWAY BUTTON ---
+    function moveButton() {
+        const btn = document.getElementById('runawayBtn');
+        const x = Math.random() * 200 - 100; // random move left/right
+        const y = Math.random() * 200 - 100; // random move up/down
+        btn.style.transform = `translate(${x}px, ${y}px)`;
+    }
+
+    // --- STAGE 7 SUCCESS ---
+    function finalSuccess() {
+        nextStage(6);
+        startConfetti();
+    }
+
+    function startConfetti() {
+        document.body.style.background = "linear-gradient(to top, #a18cd1 0%, #fbc2eb 100%)";
+    }
+
+</script>
+</body>
+</html>
